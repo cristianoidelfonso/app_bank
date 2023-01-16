@@ -1,0 +1,49 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Register{% endblock %}
+
+{% block body %}
+    
+    <style>
+        .example-wrapper { padding: 1rem; margin: 6em auto; max-width: 400px; width: 90%; font: 18px/1.5 sans-serif; top: 50%; }
+        .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+    </style>
+    
+    <div class="example-wrapper">
+        {% for flash_error in app.flashes('verify_email_error') %}
+            <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
+        {% endfor %}
+
+        <h1 class="h1 mb-2 text-primary">Register</h1>
+
+        {{ form_start(registrationForm, {'attr': {'class': 'mt-5'}}) }}
+            {# {{ form_row(registrationForm.email) }} #}
+            {# {{ form_row(registrationForm.plainPassword, {label: 'Password'}) }} #}
+            {# {{ form_row(registrationForm.agreeTerms) }} #}
+           
+             <div class="form-group">
+                {{ form_label(registrationForm.email, 'Email', {'label_attr': {'class':'form-label text-primary'}}) }}
+                {{ form_widget( registrationForm.email, {'attr': {'class': 'form-control mb-2'}} ) }}
+                {{ form_errors(registrationForm.email) }}
+            </div>
+
+            <div class="form-group">
+                {{ form_label(registrationForm.plainPassword, 'Password', {'label_attr': {'class':'form-label text-primary'}}) }}
+                {{ form_widget( registrationForm.plainPassword, {'attr': {'class': 'form-control mb-2'}} ) }}
+                {{ form_errors(registrationForm.plainPassword) }}
+            </div>
+            
+            {{ form_row(registrationForm.agreeTerms, {'row_attr':{'class':'text-primary'}}) }}
+
+            <button type="submit" class="btn btn-sm btn-primary w-100 py-2 mt-3">Register</button>
+            
+            <div class="d-flex justify-content-end align-items-center mt-3">
+                Do you have an account? &ensp; <a href="{{ path('app_login') }}">Login here</a>
+            </div>
+            <div class="d-flex justify-content-end align-items-center mt-3">
+                Return to home page? &ensp; <a href="{{ path('app_base') }}">Home</a>
+            </div>
+        {{ form_end(registrationForm) }}
+    </div>
+
+{% endblock %}

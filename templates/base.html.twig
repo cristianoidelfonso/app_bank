@@ -8,12 +8,25 @@
         {% block stylesheets %}
             {{ encore_entry_link_tags('app') }}
         {% endblock %}
+    </head>
+    <body>
+
+        {% if path(app.request.attributes.get('_route')) not in ['/login', '/register']  %}
+            <div class="d-flex justify-content-end align-items-center border-bottom border-primary">
+                {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                    <span class="text-primary mx-3">{{ app.user.email }}</span> |
+                    <a class="text-primary mx-3" href="{{ path('app_logout') }}">Sair</a>
+                {% else %}
+                    <a class="text-decoration-none text-primary mr-5 px-2" href="{{ path('app_login') }}">Login</a>
+                    <a class="text-decoration-none text-primary mr-5 px-2" href="{{ path('app_register') }}">Register</a>
+                {% endif %}
+            </div>
+        {% endif %}
+    
+        {% block body %}{% endblock %}
 
         {% block javascripts %}
             {{ encore_entry_script_tags('app') }}
         {% endblock %}
-    </head>
-    <body>
-        {% block body %}{% endblock %}
     </body>
 </html>
