@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Agencia{% endblock %}
+
+{% block body %}
+    <div class="example-wrapper">
+
+        <h1>Agencia</h1>
+
+        <table class="table">
+            <tbody>
+                <tr>
+                    <th>Id</th>
+                    <td>{{ agencia.id }}</td>
+                </tr>
+                <tr>
+                    <th>Nome</th>
+                    <td>{{ agencia.nome }}</td>
+                </tr>
+                <tr>
+                    <th>Created_at</th>
+                    <td>{{ agencia.createdAt ? agencia.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                </tr>
+                <tr>
+                    <th>Updated_at</th>
+                    <td>{{ agencia.updatedAt ? agencia.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <a href="{{ path('app_agencia_index') }}">back to list</a>
+
+        <a href="{{ path('app_agencia_edit', {'id': agencia.id}) }}">edit</a>
+
+        {{ include('agencia/_delete_form.html.twig') }}
+    </div>
+{% endblock %}

@@ -8,10 +8,16 @@
         {% block stylesheets %}
             {{ encore_entry_link_tags('app') }}
         {% endblock %}
+        <style>
+            .example-wrapper { padding: 1rem; margin: 6em auto; background: #F5F5F5; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
+            .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+        </style>
     </head>
     <body>
 
-        {% if path(app.request.attributes.get('_route')) not in ['/login', '/register']  %}
+        {# {{ dump(path(app.request.attributes.get('_route'))) }} #}
+        {# {% if path(app.request.attributes.get('_route')) not in ['/login', '/register']  %} #}
+
             <div class="d-flex justify-content-end align-items-center border-bottom border-primary">
                 {% if is_granted('IS_AUTHENTICATED_FULLY') %}
                     <span class="text-primary mx-3">{{ app.user.email }}</span> |
@@ -21,7 +27,8 @@
                     <a class="text-decoration-none text-primary mr-5 px-2" href="{{ path('app_register') }}">Register</a>
                 {% endif %}
             </div>
-        {% endif %}
+        
+        {# {% endif %} #}
     
         {% block body %}{% endblock %}
 

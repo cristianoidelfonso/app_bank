@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Conta index{% endblock %}
+
+{% block body %}
+    <div class="example-wrapper">
+        <div class="d-flex justify-content-between align-items-center">
+            <h1>Conta index</h1>
+            <a href="{{ path('app_conta_new') }}" class="btn btn-sm btn-primary">Create new</a>
+        </div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Numero</th>
+                    <th>Created_at</th>
+                    <th>Updated_at</th>
+                    <th>actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for conta in contas %}
+                <tr>
+                    <td>{{ conta.id }}</td>
+                    <td>{{ conta.numero }}</td>
+                    <td>{{ conta.createdAt ? conta.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                    <td>{{ conta.updatedAt ? conta.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+                    <td>
+                        <a href="{{ path('app_conta_show', {'id': conta.id}) }}">show</a>
+                        <a href="{{ path('app_conta_edit', {'id': conta.id}) }}">edit</a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="5">no records found</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+    </div>    
+{% endblock %}

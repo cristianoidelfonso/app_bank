@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Gerente{% endblock %}
+
+{% block body %}
+    <div class="example-wrapper">
+        <h1>Create new Gerente</h1>
+
+        {{ include('gerente/_form.html.twig') }}
+
+        <a href="{{ path('app_gerente_index') }}">back to list</a>
+    </div>
+{% endblock %}

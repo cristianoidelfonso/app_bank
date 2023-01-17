@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Agencia index{% endblock %}
+
+{% block body %}
+    <div class="example-wrapper">
+        <div class="d-flex justify-content-between align-items-center">
+            <h1>Agencia index</h1>
+            <a href="{{ path('app_agencia_new') }}" class="btn btn-sm btn-primary">Create new</a>
+        </div>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Nome</th>
+                    <th>Created_at</th>
+                    <th>Updated_at</th>
+                    <th>actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for agencia in agencias %}
+                <tr>
+                    <td>{{ agencia.id }}</td>
+                    <td>{{ agencia.nome }}</td>
+                    <td>{{ agencia.createdAt ? agencia.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                    <td>{{ agencia.updatedAt ? agencia.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+                    <td>
+                        <a href="{{ path('app_agencia_show', {'id': agencia.id}) }}">show</a>
+                        <a href="{{ path('app_agencia_edit', {'id': agencia.id}) }}">edit</a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="5">no records found</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+    </div>
+{% endblock %}

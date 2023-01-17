@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Banco{% endblock %}
+
+{% block body %}
+    <div class="example-wrapper">
+        <h1>Create new Banco</h1>
+
+        {{ include('banco/_form.html.twig') }}
+
+        <a href="{{ path('app_banco_index') }}">back to list</a>
+    </div>
+{% endblock %}

@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Banco{% endblock %}
+
+{% block body %}
+    <div class="example-wrapper">
+
+        <h1>Banco</h1>
+
+        <table class="table">
+            <tbody>
+                <tr>
+                    <th>Id</th>
+                    <td>{{ banco.id }}</td>
+                </tr>
+                <tr>
+                    <th>Nome</th>
+                    <td>{{ banco.nome }}</td>
+                </tr>
+                <tr>
+                    <th>Created_at</th>
+                    <td>{{ banco.createdAt ? banco.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                </tr>
+                <tr>
+                    <th>Updated_at</th>
+                    <td>{{ banco.updatedAt ? banco.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <a href="{{ path('app_banco_index') }}">back to list</a>
+
+        <a href="{{ path('app_banco_edit', {'id': banco.id}) }}">edit</a>
+
+        {{ include('banco/_delete_form.html.twig') }}
+
+    </div>    
+{% endblock %}
