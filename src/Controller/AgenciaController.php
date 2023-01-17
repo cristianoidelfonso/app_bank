@@ -5,12 +5,14 @@ namespace App\Controller;
 use App\Entity\Agencia;
 use App\Form\AgenciaType;
 use App\Repository\AgenciaRepository;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 #[Route('/agencia')]
+#[IsGranted('IS_AUTHENTICATED_FULLY')]
 class AgenciaController extends AbstractController
 {
     #[Route('/', name: 'app_agencia_index', methods: ['GET'])]

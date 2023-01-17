@@ -15,20 +15,30 @@
     </head>
     <body>
 
+        {# {{ dump(app.request.pathInfo)}} #}
         {# {{ dump(path(app.request.attributes.get('_route'))) }} #}
-        {# {% if path(app.request.attributes.get('_route')) not in ['/login', '/register']  %} #}
+        
+        {% if app.request.pathInfo not in ['/login', '/register']  %}
 
-            <div class="d-flex justify-content-end align-items-center border-bottom border-primary">
-                {% if is_granted('IS_AUTHENTICATED_FULLY') %}
-                    <span class="text-primary mx-3">{{ app.user.email }}</span> |
-                    <a class="text-primary mx-3" href="{{ path('app_logout') }}">Sair</a>
-                {% else %}
+            {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                <div class="d-flex justify-content-around align-items-center border-bottom border-primary">
+                    <div class="ml-5">
+                        <a class="text-decoration-none text-primary" href="{{ path('app_base') }}">Home</a>
+                    </div>
+                    <div class="mr-5">
+                        <span class="text-primary mx-3">{{ app.user.email }}</span> |
+                        <a class="text-decoration-none text-primary mx-3" href="{{ path('app_logout') }}">Sair</a>
+                    </div>
+                </div>
+            {% else %}
+                <div class="d-flex justify-content-end align-items-center border-bottom border-primary">
                     <a class="text-decoration-none text-primary mr-5 px-2" href="{{ path('app_login') }}">Login</a>
                     <a class="text-decoration-none text-primary mr-5 px-2" href="{{ path('app_register') }}">Register</a>
-                {% endif %}
-            </div>
+                </div>
+            {% endif %}
+            
         
-        {# {% endif %} #}
+        {% endif %}
     
         {% block body %}{% endblock %}
 

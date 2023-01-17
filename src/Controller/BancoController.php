@@ -5,12 +5,14 @@ namespace App\Controller;
 use App\Entity\Banco;
 use App\Form\BancoType;
 use App\Repository\BancoRepository;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 #[Route('/banco')]
+#[IsGranted('IS_AUTHENTICATED_FULLY')]
 class BancoController extends AbstractController
 {
     #[Route('/', name: 'app_banco_index', methods: ['GET'])]

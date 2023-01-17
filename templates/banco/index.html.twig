@@ -4,6 +4,8 @@
 
 {% block body %}
     <div class="example-wrapper">
+
+    {% if is_granted('IS_AUTHENTICATED_FULLY') %}
         <div class="d-flex justify-content-between align-items-center">
             <h1>Banco index</h1>
             <a href="{{ path('app_banco_new') }}" class="btn btn-sm btn-primary">Create new</a>
@@ -38,6 +40,9 @@
             {% endfor %}
             </tbody>
         </table>
+    {% else %}
+    
+    {% endif %}
 
     </div>
 {% endblock %}
