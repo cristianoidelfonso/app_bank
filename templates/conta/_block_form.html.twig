@@ -1,0 +1,5 @@
+<form method="post" action="{{ path('app_conta_block', {'id': conta.id}) }}" 
+    onsubmit="return confirm('Are you sure you want to block this item?');">
+    <input type="hidden" name="_token" value="{{ csrf_token('block' ~ conta.id) }}">
+    <button class="{{classBtn}} btn-warning">block</button>
+</form>

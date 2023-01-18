@@ -13,6 +13,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 #[Route('/banco')]
 #[IsGranted('IS_AUTHENTICATED_FULLY')]
+#[IsGranted('ROLE_ADMIN_BANCO')]
 class BancoController extends AbstractController
 {
     #[Route('/', name: 'app_banco_index', methods: ['GET'])]
@@ -23,6 +24,7 @@ class BancoController extends AbstractController
         ]);
     }
 
+    #[IsGranted('ROLE_SYS_ADMIN')]
     #[Route('/new', name: 'app_banco_new', methods: ['GET', 'POST'])]
     public function new(Request $request, BancoRepository $bancoRepository): Response
     {
@@ -53,6 +55,7 @@ class BancoController extends AbstractController
         ]);
     }
 
+    #[IsGranted(Banco::EDIT, 'banco')]
     #[Route('/{id}/edit', name: 'app_banco_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Banco $banco, BancoRepository $bancoRepository): Response
     {
@@ -72,6 +75,7 @@ class BancoController extends AbstractController
         ]);
     }
 
+    #[IsGranted('ROLE_SYS_ADMIN')]
     #[Route('/{id}', name: 'app_banco_delete', methods: ['POST'])]
     public function delete(Request $request, Banco $banco, BancoRepository $bancoRepository): Response
     {

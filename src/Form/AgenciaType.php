@@ -3,16 +3,26 @@
 namespace App\Form;
 
 use App\Entity\Agencia;
+use App\Repository\BancoRepository;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class AgenciaType extends AbstractType
 {
+    private $bancos;
+
+    public function __construct(BancoRepository $bancoRepository)
+    {
+        // $this->bancos = $bancoRepository->findAll();
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('nome')
+            // ->add('banco', ChoiceType::class, ['choices' => $this->bancos]);
             // ->add('created_at')
             // ->add('updated_at')
         ;

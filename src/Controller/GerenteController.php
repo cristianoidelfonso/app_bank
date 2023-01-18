@@ -2,11 +2,16 @@
 
 namespace App\Controller;
 
+use App\Entity\Agencia;
+use App\Entity\Banco;
 use App\Entity\Gerente;
 use App\Form\GerenteType;
+use App\Repository\AgenciaRepository;
+use App\Repository\BancoRepository;
 use App\Repository\GerenteRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -23,11 +28,25 @@ class GerenteController extends AbstractController
         ]);
     }
 
+    #[IsGranted('ROLE_ADMIN_BANCO')]
     #[Route('/new', name: 'app_gerente_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, GerenteRepository $gerenteRepository): Response
+    public function new(Request $request, 
+                        GerenteRepository $gerenteRepository, 
+                        AgenciaRepository $agenciaRepository): Response
     {
+        $agencias = $agenciaRepository->findAll();
+
         $gerente = new Gerente();
         $form = $this->createForm(GerenteType::class, $gerente);
+        $form->add('agencia', ChoiceType::class, [
+            'choices' => $agencias,
+            'choice_name' => 'nome',
+            'choice_label' => function(?Agencia $agencia){
+                $agenciaBanco = $agencia ? $agencia->getNome() .' - '. $agencia->getBanco()->getNome() : '';
+                return strtoupper($agenciaBanco);
+            }
+        ]);
+
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -51,6 +70,7 @@ class GerenteController extends AbstractController
         ]);
     }
 
+    #[IsGranted('ROLE_ADMIN_AGENCIA')]
     #[Route('/{id}/edit', name: 'app_gerente_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Gerente $gerente, GerenteRepository $gerenteRepository): Response
     {
@@ -70,6 +90,7 @@ class GerenteController extends AbstractController
         ]);
     }
 
+    #[IsGranted('ROLE_ADMIN_BANCO')]
     #[Route('/{id}', name: 'app_gerente_delete', methods: ['POST'])]
     public function delete(Request $request, Gerente $gerente, GerenteRepository $gerenteRepository): Response
     {

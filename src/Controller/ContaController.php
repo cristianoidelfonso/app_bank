@@ -15,6 +15,7 @@ use Symfony\Component\Routing\Annotation\Route;
 #[IsGranted('IS_AUTHENTICATED_FULLY')]
 class ContaController extends AbstractController
 {
+    #[IsGranted('ROLE_GERENTE')]
     #[Route('/', name: 'app_conta_index', methods: ['GET'])]
     public function index(ContaRepository $contaRepository): Response
     {
@@ -23,6 +24,7 @@ class ContaController extends AbstractController
         ]);
     }
 
+    #[IsGranted('ROLE_USER')]
     #[Route('/new', name: 'app_conta_new', methods: ['GET', 'POST'])]
     public function new(Request $request, ContaRepository $contaRepository): Response
     {
@@ -43,6 +45,7 @@ class ContaController extends AbstractController
         ]);
     }
 
+    #[IsGranted('ROLE_USER')]
     #[Route('/{id}', name: 'app_conta_show', methods: ['GET'])]
     public function show(Conta $conta): Response
     {
@@ -51,6 +54,7 @@ class ContaController extends AbstractController
         ]);
     }
 
+    #[IsGranted('ROLE_GERENTE')]
     #[Route('/{id}/edit', name: 'app_conta_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Conta $conta, ContaRepository $contaRepository): Response
     {
@@ -70,12 +74,24 @@ class ContaController extends AbstractController
         ]);
     }
 
+    #[IsGranted('ROLE_ADMIN_AGENCIA')]
     #[Route('/{id}', name: 'app_conta_delete', methods: ['POST'])]
     public function delete(Request $request, Conta $conta, ContaRepository $contaRepository): Response
     {
         if ($this->isCsrfTokenValid('delete'.$conta->getId(), $request->request->get('_token'))) {
             $contaRepository->remove($conta, true);
         }
+
+        return $this->redirectToRoute('app_conta_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    #[IsGranted('ROLE_GERENTE')]
+    #[Route('/{id}/block', name: 'app_conta_block', methods: ['GET', 'POST'])]
+    public function block(Request $request, Conta $conta, ContaRepository $contaRepository): Response
+    {
+        // if ($this->isCsrfTokenValid('delete'.$conta->getId(), $request->request->get('_token'))) {
+        //     $contaRepository->remove($conta, true);
+        // }
 
         return $this->redirectToRoute('app_conta_index', [], Response::HTTP_SEE_OTHER);
     }

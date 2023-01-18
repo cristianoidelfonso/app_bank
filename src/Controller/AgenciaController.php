@@ -3,16 +3,20 @@
 namespace App\Controller;
 
 use App\Entity\Agencia;
+use App\Entity\Banco;
 use App\Form\AgenciaType;
 use App\Repository\AgenciaRepository;
+use App\Repository\BancoRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 #[Route('/agencia')]
 #[IsGranted('IS_AUTHENTICATED_FULLY')]
+// #[IsGranted('ROLE_ADMIN_AGENCIA')]
 class AgenciaController extends AbstractController
 {
     #[Route('/', name: 'app_agencia_index', methods: ['GET'])]
@@ -23,11 +27,23 @@ class AgenciaController extends AbstractController
         ]);
     }
 
+    #[IsGranted('ROLE_ADMIN_BANCO')]
     #[Route('/new', name: 'app_agencia_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, AgenciaRepository $agenciaRepository): Response
+    public function new(Request $request, AgenciaRepository $agenciaRepository, BancoRepository $bancoRepository): Response
     {
+        $bancos = $bancoRepository->findAll();
+        dump($bancos);
+        
         $agencia = new Agencia();
         $form = $this->createForm(AgenciaType::class, $agencia);
+
+        $form->add('banco', ChoiceType::class, [
+            'choices'=> $bancos,
+            'choice_label' => function (?Banco $banco) {
+                return $banco ? strtoupper($banco->getNome()) : '';
+            }, 
+        ]);
+        
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -43,6 +59,7 @@ class AgenciaController extends AbstractController
         ]);
     }
 
+    #[IsGranted('ROLE_USER')]
     #[Route('/{id}', name: 'app_agencia_show', methods: ['GET'])]
     public function show(Agencia $agencia): Response
     {
@@ -51,6 +68,7 @@ class AgenciaController extends AbstractController
         ]);
     }
 
+    #[IsGranted('ROLE_ADMIN_BANCO')]
     #[Route('/{id}/edit', name: 'app_agencia_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Agencia $agencia, AgenciaRepository $agenciaRepository): Response
     {
@@ -70,6 +88,7 @@ class AgenciaController extends AbstractController
         ]);
     }
 
+    #[IsGranted('ROLE_ADMIN_BANCO')]
     #[Route('/{id}', name: 'app_agencia_delete', methods: ['POST'])]
     public function delete(Request $request, Agencia $agencia, AgenciaRepository $agenciaRepository): Response
     {

@@ -23,6 +23,13 @@ class Agencia
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $nome = null;
 
+    #[ORM\ManyToOne(inversedBy: 'agencias')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Banco $banco = null;
+
+    #[ORM\OneToOne(mappedBy: 'agencia', cascade: ['persist', 'remove'])]
+    private ?Gerente $gerente = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -60,6 +67,35 @@ class Agencia
     public function setNome(?string $nome): self
     {
         $this->nome = $nome;
+
+        return $this;
+    }
+
+    public function getBanco(): ?Banco
+    {
+        return $this->banco;
+    }
+
+    public function setBanco(?Banco $banco): self
+    {
+        $this->banco = $banco;
+
+        return $this;
+    }
+
+    public function getGerente(): ?Gerente
+    {
+        return $this->gerente;
+    }
+
+    public function setGerente(Gerente $gerente): self
+    {
+        // set the owning side of the relation if necessary
+        if ($gerente->getAgencia() !== $this) {
+            $gerente->setAgencia($this);
+        }
+
+        $this->gerente = $gerente;
 
         return $this;
     }

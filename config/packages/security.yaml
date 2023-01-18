@@ -18,6 +18,10 @@ security:
             lazy: true
             provider: app_user_provider
             custom_authenticator: App\Security\AppCustomAuthenticator
+            # configure the maximum login attempts
+            login_throttling:
+                max_attempts: 3          # per minute ...
+                # interval: '15 minutes' # ... or in a custom period
             logout:
                 path: app_logout
                 # where to redirect after logout
@@ -32,8 +36,27 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
+        # require ROLE_ADMIN for /admin*
         # - { path: ^/admin, roles: ROLE_ADMIN }
+        # require ROLE_USER for /profile*
         # - { path: ^/profile, roles: ROLE_USER }
+        # - { path: '^/banco',    roles: [ROLE_SYS_ADMIN, ROLE_ADMIN_BANCO] }
+        # - { path: '^/agencia',  roles: ROLE_ADMIN_AGENCIA }
+        # - { path: '^/gerente',  roles: ROLE_GERENTE }
+        # - { path: '^/conta',    roles: ROLE_USER }
+
+        # or require ROLE_ADMIN or IS_AUTHENTICATED_FULLY for /admin*
+        # - { path: '^/banco',    roles: [IS_AUTHENTICATED_FULLY, ROLE_SYS_ADMIN, ROLE_ADMIN_BANCO] }
+        # - { path: '^/agencia',  roles: [IS_AUTHENTICATED_FULLY, ROLE_ADMIN_AGENCIA] }
+        # - { path: '^/gerente',  roles: [IS_AUTHENTICATED_FULLY, ROLE_GERENTE] }
+        # - { path: '^/conta',    roles: [IS_AUTHENTICATED_FULLY, ROLE_USER] }
+    
+    # https://symfony.com/doc/current/security.html#hierarchical-roles
+    role_hierarchy:
+        ROLE_SYS_ADMIN:  [ROLE_ADMIN_BANCO]
+        ROLE_ADMIN_BANCO: [ROLE_ADMIN_AGENCIA]
+        ROLE_ADMIN_AGENCIA: [ROLE_GERENTE]
+        ROLE_GERENTE: [ROLE_USER]
 
 when@test:
     security:
