@@ -60,8 +60,6 @@ class GerenteController extends AbstractController
             $form->handleRequest($request);
 
             if ($form->isSubmitted() && $form->isValid()) {
-                dump($form->getData());
-                dd();
                 $gerente->setCreatedAt(new \Datetime());
                 $gerenteRepository->save($gerente, true);
 
@@ -74,10 +72,12 @@ class GerenteController extends AbstractController
             ]);
 
         }catch(UniqueConstraintViolationException $ex){
+            dump($ex);
             $this->addFlash('error', 'Unable to perform this operation. Contact your system administrator.');
             return $this->redirectToRoute('app_gerente_index', [], Response::HTTP_SEE_OTHER);
         }
         catch(Exception $ex){
+            dump($ex);
             $this->addFlash('error', 'An unexpected error has occurred. Contact your system administrator.');
             return $this->redirectToRoute('app_gerente_index', [], Response::HTTP_SEE_OTHER);
         }

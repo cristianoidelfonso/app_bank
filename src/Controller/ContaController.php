@@ -21,7 +21,6 @@ class ContaController extends AbstractController
     #[Route('/', name: 'app_conta_index', methods: ['GET'])]
     public function index(ContaRepository $contaRepository): Response
     {
-        dump($this->getUser(), $this->getUser()->getRoles());
         $contas = null;
         if ($this->isGranted('ROLE_SYS_ADMIN') || $this->isGranted('ROLE_ADMIN_BANCO')) {
             $contas = $contaRepository->findAll();
@@ -31,7 +30,6 @@ class ContaController extends AbstractController
             $contas = $contaRepository->findByUser($this->getUser());
         }
 
-        dump($contas);
         return $this->render('conta/index.html.twig', [
             'contas' => $contas,
         ]);

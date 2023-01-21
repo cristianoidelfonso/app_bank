@@ -27,10 +27,6 @@ class Gerente
     #[ORM\JoinColumn(nullable: false)]
     private ?Agencia $agencia = null;
 
-    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?User $user = null;
-
     public function getId(): ?int
     {
         return $this->id;
@@ -80,18 +76,6 @@ class Gerente
     public function setAgencia(Agencia $agencia): self
     {
         $this->agencia = $agencia;
-
-        return $this;
-    }
-
-    public function getUser(): ?User
-    {
-        return $this->user;
-    }
-
-    public function setUser(User $user): self
-    {
-        $this->user = $user;
 
         return $this;
     }
