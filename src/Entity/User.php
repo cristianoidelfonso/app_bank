@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -38,6 +40,22 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(type: 'boolean')]
     private $isVerified = false;
+
+    #[ORM\OneToMany(mappedBy: 'createdByUser', targetEntity: Banco::class)]
+    private Collection $creatorOfBank;
+
+    #[ORM\OneToMany(mappedBy: 'createdByUser', targetEntity: Agencia::class)]
+    private Collection $agencyCreator;
+
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Conta::class, orphanRemoval: true)]
+    private Collection $contas;
+
+    public function __construct()
+    {
+        $this->creatorOfBank = new ArrayCollection();
+        $this->agencyCreator = new ArrayCollection();
+        $this->contas = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -144,4 +162,95 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+
+    /**
+     * @return Collection<int, Banco>
+     */
+    public function getCreatorOfBank(): Collection
+    {
+        return $this->creatorOfBank;
+    }
+
+    public function addCreatorOfBank(Banco $creatorOfBank): self
+    {
+        if (!$this->creatorOfBank->contains($creatorOfBank)) {
+            $this->creatorOfBank->add($creatorOfBank);
+            $creatorOfBank->setCreatedByUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCreatorOfBank(Banco $creatorOfBank): self
+    {
+        if ($this->creatorOfBank->removeElement($creatorOfBank)) {
+            // set the owning side to null (unless already changed)
+            if ($creatorOfBank->getCreatedByUser() === $this) {
+                $creatorOfBank->setCreatedByUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Agencia>
+     */
+    public function getAgencyCreator(): Collection
+    {
+        return $this->agencyCreator;
+    }
+
+    public function addAgencyCreator(Agencia $agencyCreator): self
+    {
+        if (!$this->agencyCreator->contains($agencyCreator)) {
+            $this->agencyCreator->add($agencyCreator);
+            $agencyCreator->setCreatedByUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAgencyCreator(Agencia $agencyCreator): self
+    {
+        if ($this->agencyCreator->removeElement($agencyCreator)) {
+            // set the owning side to null (unless already changed)
+            if ($agencyCreator->getCreatedByUser() === $this) {
+                $agencyCreator->setCreatedByUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Conta>
+     */
+    public function getContas(): Collection
+    {
+        return $this->contas;
+    }
+
+    public function addConta(Conta $conta): self
+    {
+        if (!$this->contas->contains($conta)) {
+            $this->contas->add($conta);
+            $conta->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeConta(Conta $conta): self
+    {
+        if ($this->contas->removeElement($conta)) {
+            // set the owning side to null (unless already changed)
+            if ($conta->getUser() === $this) {
+                $conta->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
 }

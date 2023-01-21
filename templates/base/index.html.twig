@@ -9,11 +9,19 @@
 </style>
 
 {% if is_granted('IS_AUTHENTICATED_FULLY') %}
-    <ul class="list-group list-group-flush">
-        <li class="list-group-item"><a class="text-decoration-none" href="{{ path('app_banco_index') }}">Bancos</a></li>
-        <li class="list-group-item"><a class="text-decoration-none" href="{{ path('app_agencia_index') }}">Agências</a></li>
-        <li class="list-group-item"><a class="text-decoration-none" href="{{ path('app_gerente_index') }}">Gerentes</a></li>
-        <li class="list-group-item"><a class="text-decoration-none" href="{{ path('app_conta_index') }}">Contas</a></li>
+    <ul class="list-group list-group-flush w-25">
+        {% if (is_granted('ROLE_SYS_ADMIN') or is_granted('ROLE_ADMIN_BANCO')) %}
+            <li class="list-group-item"><a class="text-decoration-none" href="{{ path('app_banco_index') }}">Bancos</a></li>
+        {% endif %}
+        {% if is_granted('ROLE_ADMIN_AGENCIA') %}
+            <li class="list-group-item"><a class="text-decoration-none" href="{{ path('app_agencia_index') }}">Agências</a></li>
+        {% endif %}
+        {% if is_granted('ROLE_GERENTE') %}
+            <li class="list-group-item"><a class="text-decoration-none" href="{{ path('app_gerente_index') }}">Gerentes</a></li>
+        {% endif %}
+        {% if is_granted('ROLE_USER') %}
+            <li class="list-group-item"><a class="text-decoration-none" href="{{ path('app_conta_index') }}">Contas</a></li>
+        {% endif %}
     </ul>
 {% else %}
     <div class="d-flex justify-content-center align-items-center flex-column">

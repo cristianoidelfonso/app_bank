@@ -39,6 +39,32 @@ class ContaRepository extends ServiceEntityRepository
         }
     }
 
+   /**
+    * @return Conta[] Returns an array of Conta objects
+    */
+   public function findByUSer($value): array
+   {
+       return $this->createQueryBuilder('c')
+           ->andWhere('c.user = :val')
+           ->setParameter('val', $value)
+           ->getQuery()
+           ->getResult()
+       ;
+   }
+
+   /**
+    * @return Conta[] Returns an array of Conta objects
+    */
+   public function findByAgencia($value): array
+   {
+       return $this->createQueryBuilder('c')
+           ->andWhere('c.agencia = :val')
+           ->setParameter('val', $value)
+           ->getQuery()
+           ->getResult()
+       ;
+   }
+
 //    /**
 //     * @return Conta[] Returns an array of Conta objects
 //     */

@@ -12,7 +12,9 @@
             <thead>
                 <tr>
                     <th>Id</th>
-                    <th>Numero</th>
+                    <th>Número</th>
+                    <th>Agência</th>
+                    <th>Banco</th>
                     <th>Created_at</th>
                     <th>Updated_at</th>
                     <th>actions</th>
@@ -23,11 +25,13 @@
                 <tr>
                     <td>{{ conta.id }}</td>
                     <td>{{ conta.numero }}</td>
-                    <td>{{ conta.createdAt ? conta.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-                    <td>{{ conta.updatedAt ? conta.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+                    <td>{{ conta.agencia.nome }}</td>
+                    <td>{{ conta.agencia.banco.nome }}</td>
+                    <td>{{ conta.createdAt ? conta.createdAt|date('d/m/Y') : '' }}</td>
+                    <td>{{ conta.updatedAt ? conta.updatedAt|date('d/m/Y') : '' }}</td>
                     <td>
-                        <a href="{{ path('app_conta_show', {'id': conta.id}) }}">show</a>
-                        <a href="{{ path('app_conta_edit', {'id': conta.id}) }}">edit</a>
+                        <a class="btn btn-sm btn-outline-primary" href="{{ path('app_conta_show', {'conta': conta.id}) }}">show</a>
+                        <a class="btn btn-sm btn-outline-info" href="{{ path('app_conta_edit', {'conta': conta.id}) }}">edit</a>
                     </td>
                 </tr>
             {% else %}

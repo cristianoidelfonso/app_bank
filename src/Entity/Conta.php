@@ -9,6 +9,14 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: ContaRepository::class)]
 class Conta
 {
+
+    public const CREATE = 'CONTA_CREATE';
+    public const SHOW   = 'CONTA_SHOW';
+    public const UPDATE = 'CONTA_UPDATE';
+    public const DELETE = 'CONTA_DELETE';
+    public const CREDIT = 'CONTA_CREDIT';
+    public const DEBIT  = 'CONTA_DEBIT';
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -22,6 +30,14 @@ class Conta
 
     #[ORM\Column(length: 255)]
     private ?string $numero = null;
+
+    #[ORM\ManyToOne(inversedBy: 'contas')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $user = null;
+
+    #[ORM\ManyToOne(inversedBy: 'contas')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Agencia $agencia = null;
 
     public function getId(): ?int
     {
@@ -63,4 +79,29 @@ class Conta
 
         return $this;
     }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    public function getAgencia(): ?Agencia
+    {
+        return $this->agencia;
+    }
+
+    public function setAgencia(?Agencia $agencia): self
+    {
+        $this->agencia = $agencia;
+
+        return $this;
+    }
+
 }

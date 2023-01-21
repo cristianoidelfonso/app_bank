@@ -48,6 +48,7 @@ class AgenciaController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $agencia->setCreatedAt(new \Datetime());
+            $agencia->setCreatedByUser($this->getUser());
             $agenciaRepository->save($agencia, true);
 
             return $this->redirectToRoute('app_agencia_index', [], Response::HTTP_SEE_OTHER);

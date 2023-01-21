@@ -9,7 +9,10 @@ use App\Form\GerenteType;
 use App\Repository\AgenciaRepository;
 use App\Repository\BancoRepository;
 use App\Repository\GerenteRepository;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
+use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\HttpFoundation\Request;
@@ -28,38 +31,56 @@ class GerenteController extends AbstractController
         ]);
     }
 
-    #[IsGranted('ROLE_ADMIN_BANCO')]
+    #[IsGranted('ROLE_ADMIN_AGENCIA')]
     #[Route('/new', name: 'app_gerente_new', methods: ['GET', 'POST'])]
     public function new(Request $request, 
                         GerenteRepository $gerenteRepository, 
                         AgenciaRepository $agenciaRepository): Response
     {
-        $agencias = $agenciaRepository->findAll();
-
-        $gerente = new Gerente();
-        $form = $this->createForm(GerenteType::class, $gerente);
-        $form->add('agencia', ChoiceType::class, [
-            'choices' => $agencias,
-            'choice_name' => 'nome',
-            'choice_label' => function(?Agencia $agencia){
-                $agenciaBanco = $agencia ? $agencia->getNome() .' - '. $agencia->getBanco()->getNome() : '';
-                return strtoupper($agenciaBanco);
+        try{
+            $agencias = null;
+            if ($this->isGranted('ROLE_SYS_ADMIN')){
+                $agencias = $agenciaRepository->findAll();
+            }else if($this->isGranted('ROLE_ADMIN_BANCO')){
+                // $agencias = $agenciaRepository->findByBanco();
             }
-        ]);
 
-        $form->handleRequest($request);
+            $agencias = $agenciaRepository->findAll();
+            
+            $gerente = new Gerente();
+            $form = $this->createForm(GerenteType::class, $gerente);
+            $form->add('agencia', ChoiceType::class, [
+                'choices' => $agencias,
+                'choice_label' => function(?Agencia $agencia){
+                    $agenciaBanco = $agencia ? $agencia->getNome() .' - '. $agencia->getBanco()->getNome() : '';
+                    return strtoupper($agenciaBanco);
+                }
+            ]);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $gerente->setCreatedAt(new \Datetime());
-            $gerenteRepository->save($gerente, true);
+            $form->handleRequest($request);
 
+            if ($form->isSubmitted() && $form->isValid()) {
+                dump($form->getData());
+                dd();
+                $gerente->setCreatedAt(new \Datetime());
+                $gerenteRepository->save($gerente, true);
+
+                return $this->redirectToRoute('app_gerente_index', [], Response::HTTP_SEE_OTHER);
+            }
+
+            return $this->render('gerente/new.html.twig', [
+                'gerente' => $gerente,
+                'form' => $form,
+            ]);
+
+        }catch(UniqueConstraintViolationException $ex){
+            $this->addFlash('error', 'Unable to perform this operation. Contact your system administrator.');
             return $this->redirectToRoute('app_gerente_index', [], Response::HTTP_SEE_OTHER);
         }
-
-        return $this->render('gerente/new.html.twig', [
-            'gerente' => $gerente,
-            'form' => $form,
-        ]);
+        catch(Exception $ex){
+            $this->addFlash('error', 'An unexpected error has occurred. Contact your system administrator.');
+            return $this->redirectToRoute('app_gerente_index', [], Response::HTTP_SEE_OTHER);
+        }
     }
 
     #[Route('/{id}', name: 'app_gerente_show', methods: ['GET'])]

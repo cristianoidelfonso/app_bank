@@ -39,6 +39,18 @@ class BancoRepository extends ServiceEntityRepository
         }
     }
 
+    /**
+    * @return Banco[] Returns an array of Banco objects
+    */
+   public function findOneById($value): array
+   {
+        return $this->createQueryBuilder('b')
+            ->where('b.id = :val')
+            ->setParameter('val', $value)
+            ->getQuery()
+            ->getResult();
+   }
+
 //    /**
 //     * @return Banco[] Returns an array of Banco objects
 //     */

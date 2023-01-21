@@ -39,6 +39,30 @@ class AgenciaRepository extends ServiceEntityRepository
         }
     }
 
+   /**
+    * @return Agencia[] Returns an array of Agencia objects
+    */
+   public function findByUser($value): array
+   {
+       return $this->createQueryBuilder('a')
+           ->where('a.createBy = :val')
+           ->setParameter('val', $value)
+           ->getQuery()
+           ->getResult();
+   }
+
+   /**
+    * @return Agencia[] Returns an array of Agencia objects
+    */
+   public function findByBanco($value): array
+   {
+       return $this->createQueryBuilder('a')
+           ->where('a.banco = :val')
+           ->setParameter('val', $value)
+           ->getQuery()
+           ->getResult();
+   }
+
 //    /**
 //     * @return Agencia[] Returns an array of Agencia objects
 //     */

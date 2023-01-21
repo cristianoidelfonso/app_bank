@@ -61,7 +61,7 @@ class RegistrationController extends AbstractController
             );
             // do anything else you need here, like send an email
 
-            $this->addFlash('success', 'You have been successfully registered');
+            $this->addFlash('success', 'You have been successfully registered.');
 
             return $userAuthenticator->authenticateUser(
                 $user,

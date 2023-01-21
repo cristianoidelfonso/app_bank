@@ -2,13 +2,13 @@
 
 namespace App\Security\Voter;
 
-use App\Entity\Banco;
+use App\Entity\Conta;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Security\Core\User\UserInterface;
 
-class BancoVoter extends Voter
+class ContaVoter extends Voter
 {
     public function __construct(private Security $security)
     {
@@ -19,13 +19,12 @@ class BancoVoter extends Voter
     {
         // replace with your own logic
         // https://symfony.com/doc/current/security/voters.html
-        return in_array($attribute, [Banco::CREATE, Banco::EDIT, Banco::VIEW])
-            && $subject instanceof \App\Entity\Banco;
+        return in_array($attribute, [Conta::CREATE, Conta::SHOW, Conta::UPDATE, Conta::DELETE, Conta::CREDIT, Conta::DEBIT])
+            && $subject instanceof \App\Entity\Conta;
     }
 
     protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token): bool
     {
-
         /** @var User $user */
         $user = $token->getUser();
 
@@ -42,19 +41,30 @@ class BancoVoter extends Voter
 
         // ... (check conditions and return true to grant permission) ...
         switch ($attribute) {
-            case Banco::CREATE:
-                return $isAuth && (
-                    $this->security->isGranted('ROLE_SYS_ADMIN'));
+            case Conta::CREATE:
+                return $isAuth && ($this->security->isGranted('ROLE_USER'));
                 break;
-            case Banco::EDIT:
-                // dump($isAuth, $this->security->isGranted('ROLE_ADMIN_BANCO'), $subject->getCreatedByUser()->getId() === $user->getId());
+            case Conta::SHOW:
                 return $isAuth 
-                    && (($this->security->isGranted('ROLE_ADMIN_BANCO') && $subject->getCreatedByUser()->getId() === $user->getId())
+                    && (($this->security->isGranted('ROLE_USER') && $subject->getUser()->getId() === $user->getId())
                     || ($this->security->isGranted('ROLE_SYS_ADMIN'))
                 );
                 break;
-            case Banco::VIEW:
-                return true;
+            case Conta::UPDATE:
+                // logic to determine if the user can EDIT
+                // return true or false
+                break;
+            case Conta::DELETE:
+                // logic to determine if the user can EDIT
+                // return true or false
+                break;
+            case Conta::CREDIT:
+                // logic to determine if the user can EDIT
+                // return true or false
+                break;
+            case Conta::DEBIT:
+                // logic to determine if the user can EDIT
+                // return true or false
                 break;
         }
 

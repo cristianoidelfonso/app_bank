@@ -7,7 +7,9 @@
     <div class="example-wrapper">
         <div class="d-flex justify-content-between align-items-center">
             <h1>Agencia index</h1>
-            <a href="{{ path('app_agencia_new') }}" class="btn btn-sm btn-primary">Create new</a>
+            {% if is_granted('ROLE_ADMIN_BANCO') %}
+                <a href="{{ path('app_agencia_new') }}" class="btn btn-sm btn-primary">Create new</a>
+            {% endif %}
         </div>
 
         <table class="table">
@@ -27,11 +29,11 @@
                     <td>{{ agencia.id }}</td>
                     <td>{{ agencia.nome }}</td>
                     <td>{{ agencia.banco.nome }}</td>
-                    <td>{{ agencia.createdAt ? agencia.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-                    <td>{{ agencia.updatedAt ? agencia.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+                    <td>{{ agencia.createdAt ? agencia.createdAt|date('d/m/Y') : '' }}</td>
+                    <td>{{ agencia.updatedAt ? agencia.updatedAt|date('d/m/Y') : '' }}</td>
                     <td>
-                        <a href="{{ path('app_agencia_show', {'id': agencia.id}) }}">show</a>
-                        <a href="{{ path('app_agencia_edit', {'id': agencia.id}) }}">edit</a>
+                        <a class="btn btn-sm btn-outline-primary" href="{{ path('app_agencia_show', {'id': agencia.id}) }}">show</a>
+                        <a class="btn btn-sm btn-outline-info" href="{{ path('app_agencia_edit', {'id': agencia.id}) }}">edit</a>
                     </td>
                 </tr>
             {% else %}

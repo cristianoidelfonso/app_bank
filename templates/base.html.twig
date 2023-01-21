@@ -9,12 +9,11 @@
             {{ encore_entry_link_tags('app') }}
         {% endblock %}
         <style>
-            .example-wrapper { padding: 1rem; margin: 6em auto; background: #F5F5F5; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
+            .example-wrapper { padding: 1rem; margin: 6em auto; background: #F5F5F5; width: 95%; font: 18px/1.5 sans-serif; }
             .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
         </style>
     </head>
     <body>
-        {% set classBtn = "btn btn-sm"%}
 
         {# {{ dump(app.request.pathInfo)}} #}
         {# {{ dump(path(app.request.attributes.get('_route'))) }} #}
@@ -37,14 +36,47 @@
                     <a class="text-decoration-none text-primary mr-5 px-2" href="{{ path('app_register') }}">Register</a>
                 </div>
             {% endif %}
-            
-        
+                
         {% endif %}
-    
-        {% block body %}{% endblock %}
+
+        
+        {% for notice in app.flashes('notice') %}
+            <div class="d-flex justify-content-between align-items-center border bg-warning py-2 px-3 w-50 position-absolute top-1 end-0">
+                <span class="text-center"><i class="fa-solid fa-triangle-exclamation"></i>&emsp;{{ notice }}</span>
+                <span class="fechar" style="cursor: pointer;"><i class="fa-regular fa-circle-xmark"></i></span>
+            </div>
+        {% endfor %}
+        {% for message in app.flashes('success') %}
+            <div class="d-flex justify-content-between align-items-center border bg-success py-2 px-3 w-50 position-absolute top-1 end-0">
+                <span class="text-center"><i class="fa-solid fa-check"></i>&emsp;{{ message }}</span>
+                <span class="fechar" style="cursor: pointer;"><i class="fa-regular fa-circle-xmark"></i></span>
+            </div>
+        {% endfor %}
+        {% for message in app.flashes('error') %}
+            <div class="d-flex justify-content-between align-items-center border bg-danger py-2 px-3 w-50 position-absolute top-1 end-0">
+                <span class="text-center"><i class="fa-solid fa-lock"></i>&emsp;{{ message }}</span>
+                <span class="fechar" style="cursor: pointer;"><i class="fa-regular fa-circle-xmark"></i></span>
+            </div>
+        {% endfor %}
+        
+
+        {% block body %}
+            
+        {% endblock %}
 
         {% block javascripts %}
             {{ encore_entry_script_tags('app') }}
         {% endblock %}
+
+        <script>
+            document.querySelectorAll(".fechar")
+                .forEach( function(btnFechar) {
+                    btnFechar.addEventListener('click', function(){
+                        let parent = this.parentNode;
+                        parent.remove(); 
+                    });
+                });
+        </script>
+
     </body>
 </html>

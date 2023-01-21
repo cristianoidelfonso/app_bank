@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\AgenciaRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -29,6 +31,18 @@ class Agencia
 
     #[ORM\OneToOne(mappedBy: 'agencia', cascade: ['persist', 'remove'])]
     private ?Gerente $gerente = null;
+
+    #[ORM\ManyToOne(inversedBy: 'agencyCreator')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $createdByUser = null;
+
+    #[ORM\OneToMany(mappedBy: 'agencia', targetEntity: Conta::class, orphanRemoval: true)]
+    private Collection $contas;
+
+    public function __construct()
+    {
+        $this->contas = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -99,4 +113,47 @@ class Agencia
 
         return $this;
     }
+
+    public function getCreatedByUser(): ?User
+    {
+        return $this->createdByUser;
+    }
+
+    public function setCreatedByUser(?User $createdByUser): self
+    {
+        $this->createdByUser = $createdByUser;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Conta>
+     */
+    public function getContas(): Collection
+    {
+        return $this->contas;
+    }
+
+    public function addConta(Conta $conta): self
+    {
+        if (!$this->contas->contains($conta)) {
+            $this->contas->add($conta);
+            $conta->setAgencia($this);
+        }
+
+        return $this;
+    }
+
+    public function removeConta(Conta $conta): self
+    {
+        if ($this->contas->removeElement($conta)) {
+            // set the owning side to null (unless already changed)
+            if ($conta->getAgencia() === $this) {
+                $conta->setAgencia(null);
+            }
+        }
+
+        return $this;
+    }
+
 }

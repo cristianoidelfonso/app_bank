@@ -20,7 +20,7 @@ class Banco
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, unique: true)]
     private ?string $nome = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
@@ -31,6 +31,10 @@ class Banco
 
     #[ORM\OneToMany(mappedBy: 'banco', targetEntity: Agencia::class, orphanRemoval: true)]
     private Collection $agencias;
+
+    #[ORM\ManyToOne(inversedBy: 'creatorOfBank')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $createdByUser = null;
 
     public function __construct()
     {
@@ -104,6 +108,18 @@ class Banco
                 $agencia->setBanco(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getCreatedByUser(): ?User
+    {
+        return $this->createdByUser;
+    }
+
+    public function setCreatedByUser(?User $createdByUser): self
+    {
+        $this->createdByUser = $createdByUser;
 
         return $this;
     }
